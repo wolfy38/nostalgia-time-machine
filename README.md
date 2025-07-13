@@ -183,7 +183,7 @@ This project is licensed under the ISC License.
 
 ## Support 💬
 
-For support, email support@nostalgiatimemachine.com or create an issue in the repository.
+For support, email masanishlok@gmail.com or create an issue in the repository.
 
 ## Acknowledgments 🙏
 
