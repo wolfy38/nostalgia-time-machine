@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | The Nostalgia Time Machine</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a3d, #0a0a23);
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="white" opacity="0.8"/><circle cx="90" cy="20" r="2" fill="white" opacity="0.6"/><circle cx="50" cy="80" r="1" fill="white" opacity="0.7"/><circle cx="30" cy="50" r="1.5" fill="white" opacity="0.5"/></svg>') repeat;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            color: #FFD700 !important;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #ffcc00;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-outline-light {
+            border-color: #FFD700;
+            color: #FFD700;
+            border-radius: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            transition: background 0.3s, color 0.3s, transform 0.1s, box-shadow 0.3s;
+        }
+
+        .btn-outline-light:hover {
+            background: #FFD700;
+            color: #0a0a23;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffcc00;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-grow: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .retro-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700, 0 0 30px #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 800px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .profile-section {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px; 
+        }
+
+        .profile-section h5 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.3rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-section p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .profile-section p i {
+            margin-right: 15px;
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+
+        .edit-profile-btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .edit-profile-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ffcc00;
+        }
+
+        .year-select-container {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .year-select-container .form-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .form-label {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0;
+            text-shadow: 0 0 5px #FFD700;
+        }
+
+        .form-select {
+            background: #0a0a23;
+            color: #fff;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1.1rem;
+            width: 200px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-select:focus {
+            border-color: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #FFD700;
+            border: none;
+            color: #0a0a23;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffcc00;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+            justify-content: center;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            max-width: 500px; 
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #ffcc00;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        /* List Group */
+        .list-group-item {
+            background: transparent;
+            color: #ddd;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .list-group-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.02);
+        }
+
+        .list-group-item.text-muted {
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* Favorite Button */
+        .favorite-btn {
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .favorite-btn:hover {
+            color: #ffcc00;
+            transform: scale(1.2);
+        }
+
+        .favorite-btn.favorited {
+            color: #FFD700;
+        }
+
+        /* Nostalgia Content */
+        #nostalgiaContent {
+            min-height: 300px;
+            position: relative;
+        }
+
+        .spinner-border {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .text-danger {
+            font-size: 1.1rem;
+        }
+
+        .btn-link {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-link:hover {
+            color: #ffcc00;
+            text-decoration: underline;
+        }
+
+        /* Share Buttons */
+        .share-btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            border-radius: 15px;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+        }
+
+        .share-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ffcc00;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-content h5 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.3rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            background: #0a0a23;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .modal-content input:focus {
+            border-color: #ffcc00;
+            box-shadow: 0 0 10px #ffcc00;
+        }
+
+        .modal-content .btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+            margin: 0 10px;
+        }
+
+        .modal-content .btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ffcc00;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            background-size: 200% 100%;
+            padding: 20px 0;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            .retro-text {
+                font-size: 1.5rem;
+            }
+
+            .lead {
+                font-size: 1rem;
+            }
+
+            .card {
+                max-width: 100%;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .list-group-item {
+                font-size: 1rem;
+                padding: 10px;
+            }
+
+            .form-label {
+                font-size: 1rem;
+            }
+
+            .form-select {
+                font-size: 1rem;
+                padding: 8px;
+                width: 150px;
+            }
+
+            .btn-primary {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+
+            .profile-section h5 {
+                font-size: 1.1rem;
+            }
+
+            .profile-section p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+
+            .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .retro-text {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .year-select-container {
+                padding: 20px;
+            }
+
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="navbar">
+        <a class="navbar-brand" href="{{ home_url }}">The Nostalgia Time Machine</a>
+        <button class="btn btn-outline-light" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <div class="container">
+        <h2 class="retro-text">Welcome, <span id="username">{{ username }}</span>! <span class="wave">👋</span></h2>
+        <p class="lead">Step into the past—select a year to relive its music, events, and digital relics.</p>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <h5>Time Traveler Profile 🧑‍🚀</h5>
+            <p><i class="fas fa-user"></i> Username: <span id="profile-username">{{ username }}</span></p>
+            <p><i class="fas fa-envelope"></i> Email: <span id="profile-email">Loading...</span></p>
+            <p><i class="fas fa-calendar-alt"></i> Joined: <span id="profile-joined">Loading...</span></p>
+            <button class="edit-profile-btn" onclick="openEditModal()">Edit Profile</button>
+        </div>
+
+        <!-- Year Selection -->
+        <div class="year-select-container">
+            <div class="form-group">
+                <label for="yearSelect" class="form-label">Select Year:</label>
+                <select id="yearSelect" class="form-select">
+                    <option value="" selected disabled>Choose a Year</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadContent()">
+                    <i class="fas fa-rocket"></i> Travel Back
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-sections">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your Time Capsule ⭐</h5>
+                    <ul id="favoritesList" class="list-group">
+                        <li class="list-group-item text-muted">No memories saved yet.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Time Machine Portal 🕰️</h5>
+                    <div id="nostalgiaContent">
+                        <p class="text-muted">Pick a year above to start your journey through time!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <h5>Edit Profile</h5>
+            <input type="text" id="editUsername" placeholder="New Username" value="{{ username }}">
+            <input type="email" id="editEmail" placeholder="New Email">
+            <div style="text-align: center;">
+                <button class="btn" onclick="saveProfile()">Save</button>
+                <button class="btn" onclick="closeEditModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-light">
+        <p>© 2025 The Nostalgia Time Machine | Powered by xAI</p>
+    </footer>
+
+    <script>
+        // Populate year dropdown (1980 to current year)
+        const yearSelect = document.getElementById('yearSelect');
+        const currentYear = new Date().getFullYear();
+        for (let year = 1980; year <= currentYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        }
+
+        let favorites = [];
+        fetch('/get_user_data')
+            .then(response => {
+                if (!response.ok) throw new Error('Not logged in');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('username').textContent = data.username;
+                document.getElementById('profile-username').textContent = data.username;
+                document.getElementById('profile-email').textContent = data.email;
+                document.getElementById('profile-joined').textContent = data.joined;
+                document.getElementById('editUsername').value = data.username;
+                document.getElementById('editEmail').value = data.email; 
+                return fetch('/get_favorites');
+            })
+            .then(response => response.json())
+            .then(data => {
+                favorites = data.favorites || [];
+                updateFavoritesList();
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                window.location.href = "{{ login_url }}";
+            });
+
+        // Load nostalgia content for selected year
+        function loadContent() {
+            const year = yearSelect.value;
+            if (!year) {
+                alert('Please select a year to travel back!');
+                return;
+            }
+
+            const nostalgiaContent = document.getElementById('nostalgiaContent');
+            nostalgiaContent.innerHTML = '<div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+            fetch(`/get_nostalgia_data/${year}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load data');
+                    return response.json();
+                })
+                .then(data => {
+                    nostalgiaContent.innerHTML = '';
+
+                    // Music
+                    const musicList = document.createElement('ul');
+                    musicList.className = 'list-group mb-4';
+                    musicList.innerHTML = '<li class="list-group-item fw-bold">Popular Music 🎶</li>';
+                    data.music.forEach((song, index) => {
+                        const isFavorited = favorites.some(f => f.type === 'music' && f.item === song);
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        li.innerHTML = `
+                            ${song}
+                            <div>
+                                <button class="share-btn me-2" onclick="shareMemory('music', '${song}')"><i class="fas fa-share-alt"></i> Share</button>
+                                <i class="fas fa-star favorite-btn ${isFavorited ? 'favorited' : ''}" data-type="music" data-item="${song}"></i>
+                            </div>
+                        `;
+                        musicList.appendChild(li);
+                    });
+                    nostalgiaContent.appendChild(musicList);
+
+                    // Events
+                    const eventsList = document.createElement('ul');
+                    eventsList.className = 'list-group mb-4';
+                    eventsList.innerHTML = '<li class="list-group-item fw-bold">Key Events 📰</li>';
+                    data.events.forEach((event, index) => {
+                        const isFavorited = favorites.some(f => f.type === 'event' && f.item === event);
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        li.innerHTML = `
+                            ${event}
+                            <div>
+                                <button class="share-btn me-2" onclick="shareMemory('event', '${event}')"><i class="fas fa-share-alt"></i> Share</button>
+                                <i class="fas fa-star favorite-btn ${isFavorited ? 'favorited' : ''}" data-type="event" data-item="${event}"></i>
+                            </div>
+                        `;
+                        eventsList.appendChild(li);
+                    });
+                    nostalgiaContent.appendChild(eventsList);
+
+                    // Websites
+                    const websitesSection = document.createElement('div');
+                    websitesSection.innerHTML = '<h6 class="fw-bold mb-3">Websites of the Era 🌐</h6>';
+                    const websitesList = document.createElement('div');
+                    websitesList.className = 'd-flex flex-wrap gap-2';
+                    data.websites.forEach(site => {
+                        const a = document.createElement('a');
+                        a.href = site.url;
+                        a.target = '_blank';
+                        a.className = 'btn btn-outline-light btn-sm';
+                        a.textContent = site.name;
+                        websitesList.appendChild(a);
+                    });
+                    websitesSection.appendChild(websitesList);
+                    nostalgiaContent.appendChild(websitesSection);
+
+                    // Add favorite button listeners
+                    document.querySelectorAll('.favorite-btn').forEach(btn => {
+                        btn.addEventListener('click', toggleFavorite);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching nostalgia data:', error);
+                    nostalgiaContent.innerHTML = '<p class="text-danger">Error loading time machine data. <button class="btn btn-link text-warning" onclick="loadContent()">Retry</button></p>';
+                });
+        }
+
+        // Toggle favorite and sync with backend
+        function toggleFavorite(event) {
+            const btn = event.target;
+            const type = btn.dataset.type;
+            const item = btn.dataset.item;
+            const isFavorited = btn.classList.contains('favorited');
+
+            fetch('/toggle_favorite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, item, action: isFavorited ? 'remove' : 'add' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.classList.toggle('favorited');
+                    favorites = data.favorites;
+                    updateFavoritesList();
+                } else {
+                    alert('Failed to update favorites.');
+                }
+            })
+            .catch(error => console.error('Error toggling favorite:', error));
+        }
+
+        // Update favorites list UI
+        function updateFavoritesList() {
+            const favoritesList = document.getElementById('favoritesList');
+            favoritesList.innerHTML = '';
+            if (favorites.length === 0) {
+                favoritesList.innerHTML = '<li class="list-group-item text-muted">No memories saved yet.</li>';
+            } else {
+                favorites.forEach(fav => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${fav.type === 'music' ? '🎶' : '📰'} ${fav.item}`;
+                    favoritesList.appendChild(li);
+                });
+            }
+        }
+
+        // Share memory function
+        function shareMemory(type, item) {
+            const shareText = `I found this amazing ${type} from the past on The Nostalgia Time Machine: ${item}! Check it out!`;
+            const shareUrl = window.location.href;
+
+            // Twitter Share
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+            window.open(twitterUrl, '_blank');
+        }
+
+        // Edit Profile Modal Functions
+        function openEditModal() {
+            document.getElementById('editProfileModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        function saveProfile() {
+            const newUsername = document.getElementById('editUsername').value.trim();
+            const newEmail = document.getElementById('editEmail').value.trim();
+            if (!newUsername || !newEmail) {
+                alert('Username and email cannot be empty!');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                alert('Please enter a valid email address!');
+                return;
+            }
+
+            fetch('/update_profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: newUsername, email: newEmail })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('username').textContent = data.username;
+                    document.getElementById('profile-username').textContent = data.username;
+                    document.getElementById('profile-email').textContent = data.email;
+                    document.getElementById('editUsername').value = data.username;
+                    document.getElementById('editEmail').value = data.email;
+                    closeEditModal();
+                    alert('Profile updated successfully!');
+                } else {
+                    alert('Failed to update profile: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile.');
+            });
+        }
+
+        // Logout function
+        function logout() {
+            fetch('/logout', { method: 'GET' })
+                .then(() => window.location.href = '{{ home_url }}')
+                .catch(error => console.error('Logout failed:', error));
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+    </script>
+</body>
+</html>

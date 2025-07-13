@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Nostalgia Time Machine</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts for Retro Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a3d, #0a0a23);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .header h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+        }
+
+        .header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .header nav ul li a {
+            color: #ddd;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .header nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #FFD700;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .header nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .header nav ul li a:hover {
+            color: #FFD700;
+        }
+
+        .join-btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px #FFD700;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+        }
+
+        .join-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffcc00;
+        }
+
+        /* Hero Section with Retro Timeline Slider */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 50px;
+            min-height: 80vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{{ url_for("static", filename="hero-bg.jpg") }}') no-repeat center/cover;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .hero .content, .hero .timeline-slider {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .content {
+            max-width: 50%;
+        }
+
+        .hero h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5rem;
+            color: #FFD700;
+            text-shadow: 0 0 15px #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        .hero .primary-btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px #FFD700;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.3s;
+        }
+
+        .hero .primary-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ffcc00;
+        }
+
+        /* Retro Timeline Slider */
+        .timeline-slider {
+            width: 400px;
+            height: 300px;
+            background: linear-gradient(145deg, #1a1a3d, #0a0a23);
+            border: 5px solid #FFD700;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .timeline-slider .timeline-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .timeline-container {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline {
+            width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-markers {
+            position: absolute;
+            top: -30px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-marker {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            color: #ddd;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .timeline-marker:hover {
+            color: #FFD700;
+        }
+
+        .timeline-marker::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 20px;
+            background: #ddd;
+            border-radius: 2px;
+        }
+
+        .timeline-marker:hover::after {
+            background: #FFD700;
+        }
+
+        .timeline-marker.past::before {
+            content: '🕰️';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+        }
+
+        .timeline-marker.future::before {
+            content: '🚀';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+        }
+
+        .timeline-slider input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .timeline-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FFD700;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .timeline-slider input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .timeline-slider input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #FFD700;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .timeline-slider input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 50px;
+            text-align: center;
+            background: #0a0a23;
+        }
+
+        .features h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .features p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-box {
+            background: #1a1a3d;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-box .icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-box h3 {
+            font-size: 1.3rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .feature-box p {
+            color: #bbb;
+        }
+
+        /* Testimonial Section */
+        .testimonial-section {
+            padding: 80px 50px;
+            background: #1a1a3d;
+            text-align: center;
+        }
+
+        .testimonial-section h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            color: #FFD700;
+            margin-bottom: 40px;
+        }
+
+        .testimonial-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .testimonial-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-card h3 {
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
+
+        .testimonial-card span {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-dots {
+            margin-top: 20px;
+        }
+
+        .testimonial-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #bbb;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .testimonial-dot.active {
+            background: #FFD700;
+        }
+
+        /* Time Travel Section */
+        .time-travel-section {
+            padding: 80px 50px;
+            background: #0a0a23;
+        }
+
+        .time-travel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .time-card {
+            background: #1a1a3d;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .time-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .time-card h3 {
+            font-size: 1.5rem;
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+
+        .time-card p, .time-card ul {
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .time-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .time-card ul li {
+            margin-bottom: 10px;
+        }
+
+        .time-card img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .time-card .primary-btn {
+            background: #FFD700;
+            color: #0a0a23;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        .time-card .primary-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(90deg, #1a1a3d, #2a2a5d, #1a1a3d);
+            padding: 50px 50px 20px;
+            border-top: 2px solid #FFD700;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 30px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-section h3 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.3rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .footer-section p, .footer-section ul {
+            color: #bbb;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #ddd;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            background: #FFD700;
+            bottom: -2px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .footer-section ul li a:hover::after {
+            width: 100%;
+        }
+
+        .footer-section ul li a:hover {
+            color: #FFD700;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons li a {
+            color: #ddd;
+            font-size: 1.8rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-icons li a:hover {
+            color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .footer-bottom p {
+            color: #bbb;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header nav ul {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 50px 20px;
+            }
+
+            .hero .content {
+                max-width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .timeline-slider {
+                width: 300px;
+                height: 250px;
+            }
+
+            .timeline-slider .timeline-title {
+                font-size: 1rem;
+            }
+
+            .timeline-marker {
+                font-size: 0.7rem;
+            }
+
+            .timeline-marker::after {
+                height: 15px;
+                bottom: -15px;
+            }
+
+            .timeline-marker.past::before,
+            .timeline-marker.future::before {
+                font-size: 1rem;
+                top: -25px;
+            }
+
+            .time-travel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>The Nostalgia Time Machine</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+        <button class="join-btn" onclick="redirectToLogin()">Join Now</button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="content">
+            <h2>Rediscover Your Favorite Memories</h2>
+            <p>Step into the Nostalgia Time Machine and explore music, events, and cultural highlights from your chosen year. Relive the past today!</p>
+            <div class="buttons">
+                <button class="primary-btn" onclick="redirectToLogin()">Join Now</button>
+            </div>
+        </div>
+        <div class="timeline-slider">
+            <div class="timeline-title">Travel Through Time</div>
+            <div class="timeline-container">
+                <div class="timeline">
+                    <div class="timeline-markers">
+                        <div class="timeline-marker past" onclick="redirectToLogin()">1950s</div>
+                        <div class="timeline-marker" onclick="redirectToLogin()">1970s</div>
+                        <div class="timeline-marker" onclick="redirectToLogin()">1990s</div>
+                        <div class="timeline-marker" onclick="redirectToLogin()">2010s</div>
+                        <div class="timeline-marker future" onclick="redirectToLogin()">Future</div>
+                    </div>
+                    <input type="range" min="0" max="100" value="50" step="25" oninput="updateTimeline(this.value)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Your Gateway to the Past -->
+    <section class="features" id="features">
+        <h2>Your Gateway to the Past</h2>
+        <p>The Nostalgia Time Machine lets you choose any year, offering a unique blend of music, events, and a peek into history you won’t forget.</p>
+        
+        <div class="feature-grid">
+            <div class="feature-box">
+                <span class="icon">🚀</span>
+                <h3>Year Selection</h3>
+                <p>Easily select a year to unlock unforgettable memories from that time.</p>
+            </div>
+            <div class="feature-box">
+                <span class="icon">💜</span>
+                <h3>Archived Websites</h3>
+                <p>Explore old versions of websites like Google, Facebook, and more.</p>
+            </div>
+            <div class="feature-box">
+                <span class="icon">🌗</span>
+                <h3>Trending Media</h3>
+                <p>Watch classic videos and listen to iconic songs that defined your chosen year.</p>
+            </div>
+            <div class="feature-box">
+                <span class="icon">🔒</span>
+                <h3>Historical News</h3>
+                <p>Stay updated with major news headlines and significant events from the time.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonial-section">
+        <h2>What Our Users Say</h2>
+        <div class="testimonial-container">
+            <div class="testimonial-wrapper">
+                <div class="testimonial-card">
+                    <p>"The Nostalgia Time Machine transformed my memories into an adventure! Loved exploring the past."</p>
+                    <h3>John Doe</h3>
+                    <span>History Buff</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"A magical experience! It felt like reliving my childhood all over again."</p>
+                    <h3>Jane Smith</h3>
+                    <span>Tech Enthusiast</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"So much fun! The interactive elements really brought history to life."</p>
+                    <h3>Alex Johnson</h3>
+                    <span>Traveler</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="testimonial-dots">
+            <span class="testimonial-dot active" onclick="showTestimonial(0)"></span>
+            <span class="testimonial-dot" onclick="showTestimonial(1)"></span>
+            <span class="testimonial-dot" onclick="showTestimonial(2)"></span>
+        </div>
+    </section>
+
+    <!-- Time Travel Section -->
+    <section class="time-travel-section" id="time-travel">
+        <div class="time-travel-grid">
+            <div class="time-card text-card">
+                <h3>Explore Your Favorite Year with Us!</h3>
+                <p>Travel back in time to relive cherished memories and discover historical moments.</p>
+                <button class="primary-btn" onclick="redirectToLogin()">Get Started</button>
+            </div>
+            <div class="time-card image-card">
+                <img src="{{ url_for('static', filename='your-image-1.png') }}" alt="Memory Image 1">
+            </div>
+            <div class="time-card image-card">
+                <img src="{{ url_for('static', filename='your-image-2.png') }}" alt="Memory Image 2">
+            </div>
+            <div class="time-card text-card">
+                <h3>Time Travel Excursion</h3>
+                <ul>
+                    <li>✔️ Yearly Selections</li>
+                    <li>✔️ Cultural Highlights</li>
+                </ul>
+                <button class="primary-btn" onclick="redirectToLogin()">Join Now</button>
+            </div>
+            <div class="time-card text-card">
+                <h3>Nostalgic Exploration</h3>
+                <ul>
+                    <li>✔️ Digital Archives</li>
+                    <li>✔️ Significant Events</li>
+                </ul>
+                <button class="primary-btn" onclick="redirectToLogin()">Dive In</button>
+            </div>
+            <div class="time-card image-card">
+                <img src="{{ url_for('static', filename='your-image-3.png') }}" alt="Memory Image 3">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>The Nostalgia Time Machine is your portal to the past, bringing memories, music, and history back to life.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="/privacy-policy">Privacy Policy</a></li>
+                    <li><a href="/terms-of-service">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <p>We’d love to hear from you! Reach out via email or follow us on social media.</p>
+                <p>Email: <a href="mailto:support@nostalgiatimemachine.com">support@nostalgiatimemachine.com</a></p>
+                <ul class="social-icons">
+                    <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 The Nostalgia Time Machine. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script>
+        // Redirect to login
+        function redirectToLogin() {
+            window.location.href = "{{ url_for('login') }}";
+        }
+
+        // Testimonial sliding
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const dots = document.querySelectorAll('.testimonial-dot');
+        const wrapper = document.querySelector('.testimonial-wrapper');
+
+        function showTestimonial(index) {
+            currentTestimonial = index;
+            wrapper.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => showTestimonial(index));
+        });
+
+        function updateTimeline(value) {
+            const markers = document.querySelectorAll('.timeline-marker');
+            markers.forEach(marker => marker.style.color = '#ddd');
+            if (value == 0) {
+                markers[0].style.color = '#FFD700';
+            } else if (value == 25) {
+                markers[1].style.color = '#FFD700';
+            } else if (value == 50) {
+                markers[2].style.color = '#FFD700';
+            } else if (value == 75) {
+                markers[3].style.color = '#FFD700';
+            } else if (value == 100) {
+                markers[4].style.color = '#FFD700';
+            }
+        }
+    </script>
+</body>
+</html>
